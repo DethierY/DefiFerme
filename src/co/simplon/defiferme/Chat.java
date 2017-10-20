@@ -40,8 +40,8 @@ public class Chat {
 	}
 	
 	protected int chasserSouris (int sourisDansZone) {
-		this.scoreDeLaNuit = 0; // réinitialisation de lattribut
-		if (sourisDansZone > this.objectifDeChasse) {  // calcul le palmares du chat cette nuit
+		this.scoreDeLaNuit = 0; // réinitialisation de l'attribut
+		if (sourisDansZone > this.objectifDeChasse) {  // calcul du score du chat cette nuit
 			this.scoreDeLaNuit = this.objectifDeChasse / this.handicap;
 		}
 		else if  (sourisDansZone > this.handicap) {

@@ -7,7 +7,7 @@ public class Ferme {
 	int nbreSouris;
 	int nbreZones;
 	int nbreChatsDeFerme;
-	static ArrayList<String> identificationZone = new ArrayList<String> () {{
+	static ArrayList<String> identificationZone = new ArrayList<String> () {{ // le nom des zones
 		add ("zone A");
 		add ("zone B");
 		add ("zone C");
@@ -23,23 +23,15 @@ public class Ferme {
 	}
 	
 	public void lancerJeu () {
-		Fermier fermier = this.creationFermier(this.nbreChatsDeFerme);
-		nbreSourisParZone = this.repartirSourisDebut(this.nbreSouris);
-		while (this.nbreSouris > 0) {
+		Fermier fermier = this.creationFermier(this.nbreChatsDeFerme);  // création du fermier
+		nbreSourisParZone = this.repartirSourisDebut(this.nbreSouris);  // répartitioin initiale des souris
+		while (this.nbreSouris > 0) {   // boucle qui fait faire un tour de jeu tant qu'il y a des souris vivantes
 			this.faireUnTourDeJeu(fermier);
 			nbreTours ++;
 		}
 		System.out.println("La chasse a duré " + nbreTours + " jours.");
-		fermier.afficherPalmares ();
+		fermier.afficherPalmares ();  // affichage du palmares classé ordre décroissant
 	}
-	
-	private void faireUnTourDeJeu (Fermier fermier) {
-		this.changerSourisDeZone ();
-		this.afficherNbreSourisParZone ();
-		fermier.donnerOrdres (this.nbreZones , nbreSourisParZone , identificationZone);
-		nbreSouris = this.recalculerNbreSouris ();
-	}
-	
 	
 	private Fermier creationFermier (int chats) {
 		Fermier proprio = new Fermier (chats);
@@ -63,6 +55,13 @@ public class Ferme {
 		return repartition;
 	}
 	
+	private void faireUnTourDeJeu (Fermier fermier) {  // méthode qui fait un tour de jeu
+		this.changerSourisDeZone ();
+		this.afficherNbreSourisParZone ();
+		fermier.donnerOrdres (this.nbreZones , nbreSourisParZone , identificationZone); // le fermier donne ses ordres aux chats
+		nbreSouris = this.recalculerNbreSouris ();  // le nbre de souris est affecté par la chasse des chats
+	}
+	
 	private void changerSourisDeZone () {
 		Integer sourisRestant;
 		Integer sourisArrivant;
@@ -76,10 +75,10 @@ public class Ferme {
 				sourisArrivant = (nbreSourisParZone.get(i-1) + 1) /2;
 				sourisRestant = nbreSourisParZone.get(i)  /2;
 			}
-			nouvelleRepartition.add(sourisRestant + sourisArrivant);
+			nouvelleRepartition.add(sourisRestant + sourisArrivant);  // construction de l'arraylist avec la nouvelle répartition des souris par zone
 		}
 		for (int i = 0 ; i < nouvelleRepartition.size(); i++) {
-			nbreSourisParZone.set(i, nouvelleRepartition.get(i));
+			nbreSourisParZone.set(i, nouvelleRepartition.get(i));  // copie de l'arraylist nouvelleRepartitioin dans nbreSourisParZone
 		}
 	}
 	
@@ -91,12 +90,12 @@ public class Ferme {
 		}
 	}
 	
-	private int recalculerNbreSouris () {
+	private int recalculerNbreSouris () {  // pour recalculer le nombre de souris après la chasse, on additionne les souris de chaque zone après la chasse
 		int total = 0;
 		for (int nbre : nbreSourisParZone) {
 			total = total + nbre;
 		}
-		return total;
+		return total; 
 	}
 	
 	public void setNbreSouris(int nbreSouris) {
