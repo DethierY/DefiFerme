@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Fermier {
 	
 	private int nbreChats;
-	private static ArrayList<Chat> ordreDeChasse;
+	private ArrayList<Chat> listeChats = new ArrayList<Chat> ();
 	private static ArrayList<String> nomChats = new ArrayList<String> () {{
 		add ("Nemo");
 		add ("Garfield");
@@ -20,19 +20,21 @@ public class Fermier {
 		add (2);
 		add (7);
 	}};
-	private static ArrayList<Chat> listeChats = new ArrayList<Chat> ();
 	
 	public Fermier (int nbreChats) {
 		this.nbreChats = nbreChats;
+		this.listeChats = this.creationChats ();
 	}
 	
-	protected void donnerOrdres () {
-		listeChats = this.creationChats (nbreChats);
-		ordreDeChasse = this.etablirOrdreDeChasse(listeChats);
-				
+	protected void donnerOrdres (int nbreZones , ArrayList<Integer> sourisParZone, ArrayList<String> nomZones) {
+		this.etablirOrdreDeChasse();
+		this.donnerMission ();
+		this.attribuerZoneChasse (nbreZones);
+		this.faireChasserChats (sourisParZone);
+		this.demanderRapports (nomZones);
 	}
 	
-	private ArrayList<Chat> creationChats (int nbreChats) {  // creation d'un certain nombre de chats
+	private ArrayList<Chat> creationChats () {  // creation d'un certain nombre de chats
 		ArrayList<Chat> instancesChat = new ArrayList <Chat> ();
 		for (int i = 0 ; i < nbreChats ; i++) {
 			Chat nouveauChat = new Chat (nomChats.get(i) , ageChats.get(i));
@@ -41,26 +43,67 @@ public class Fermier {
 		return instancesChat;
 	}
 	
-	protected ArrayList<Chat> etablirOrdreDeChasse (ArrayList<Chat> chats) {
+	private void etablirOrdreDeChasse () {
 		ArrayList<Chat> intermediaire = new ArrayList<Chat> ();
-		for (Chat copie : chats) {
+		for (Chat copie : listeChats) {
 			intermediaire.add(copie);
 		}
-		ArrayList<Chat> nvlOrdre = new ArrayList<Chat> ();
+		ArrayList<Chat> ordreDeChasse = new ArrayList<Chat> ();
 		for (int i = 0 ; i < nbreChats; i++) {    
 			int tirage = (int) (Math.random () * intermediaire.size());
-			nvlOrdre.add(intermediaire.get(tirage));
+			ordreDeChasse.add(intermediaire.get(tirage));
 			intermediaire.remove(tirage);
 			}
-		return nvlOrdre;
+		for(int i = 0 ; i < ordreDeChasse.size() ; i++) {
+			ordreDeChasse.get(i).setOrdreDAction(i);
+		}
+	}
+	
+	private void donnerMission () {
+		for (Chat nom : this.listeChats) {
+			nom.setObjectifDeChasse( (int) (Math.random () * 15) +15);
+		}
+	}
+	
+	private void attribuerZoneChasse (int nbreZones) {
+		for (Chat chat : this.listeChats) {
+			chat.setZoneDeChasse ( (int) (Math.random () * nbreZones) );
+		}
+	}
+	
+	private void faireChasserChats (ArrayList<Integer> sourisParZone) {
+		for (Chat chat : this.listeChats) {
+			int sourisDansZone = sourisParZone.get(chat.getZoneDeChasse());
+			sourisDansZone = sourisDansZone - chat.chasserSouris (sourisDansZone);
+			sourisParZone.set(chat.getZoneDeChasse(), sourisDansZone);
+		}
+	}
+	private void demanderRapports (ArrayList<String> nomZones) {
+		for (Chat chat : this.listeChats) {
+			chat.faireSonRapport (nomZones);
+		}
+	}
+	
+	protected void afficherPalmares () {
+		for (Chat chat : listeChats) {
+			System.out.println(chat.getNomChat () + "a tué " + chat.getScoreTotal() + " souris.");
+		}
 	}
 	
 	public void setNbreChats (int nbreChats) {
 		this.nbreChats = nbreChats;
 	}
+	
 	public int getNbreChats () {
 		return this.nbreChats;
 	}
 	
+	public void setListeChats (ArrayList<Chat> listeChats) {
+		this.listeChats = listeChats;
+	}
+	
+	public ArrayList<Chat> getListeChats () {
+		return this.listeChats;
+	}
 
 }

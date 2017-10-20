@@ -6,7 +6,7 @@ public class Ferme {
 	
 	int nbreSouris;
 	int nbreZones;
-	int nbreChatsDuJeu;
+	int nbreChatsDeFerme;
 	static ArrayList<String> identificationZone = new ArrayList<String> () {{
 		add ("zone A");
 		add ("zone B");
@@ -14,21 +14,32 @@ public class Ferme {
 		add ("zone D");
 	}};
 	static ArrayList<Integer> nbreSourisParZone = new ArrayList<Integer> ();
+	static int nbreTours = 0;
 	
-	public Ferme(int nbreZones, int nbreChatDuJeu , int nbreSouris) {
+	public Ferme(int nbreZones, int nbreChatDeFerme , int nbreSouris) {
 		this.nbreZones = nbreZones;
-		this.nbreChatsDuJeu = nbreChatDuJeu;
+		this.nbreChatsDeFerme = nbreChatDeFerme;
 		this.nbreSouris = nbreSouris;
 	}
 	
 	public void lancerJeu () {
-		Fermier fermier = this.creationFermier(nbreChatsDuJeu);
-		nbreSourisParZone = this.repartirSourisDebut(nbreSouris);
+		Fermier fermier = this.creationFermier(this.nbreChatsDeFerme);
+		nbreSourisParZone = this.repartirSourisDebut(this.nbreSouris);
+		while (this.nbreSouris > 0) {
+			this.faireUnTourDeJeu(fermier);
+			nbreTours ++;
+		}
+		System.out.println("La chasse a duré " + nbreTours + "jours.");
+		fermier.afficherPalmares ();
+	}
+	
+	private void faireUnTourDeJeu (Fermier fermier) {
 		this.changerSourisDeZone ();
 		this.afficherNbreSourisParZone ();
-		fermier.donnerOrdres ();
-		
+		fermier.donnerOrdres (this.nbreZones , nbreSourisParZone , identificationZone);
+		nbreSouris = this.recalculerNbreSouris ();
 	}
+	
 	
 	private Fermier creationFermier (int chats) {
 		Fermier proprio = new Fermier (chats);
@@ -80,6 +91,14 @@ public class Ferme {
 		}
 	}
 	
+	private int recalculerNbreSouris () {
+		int total = 0;
+		for (int nbre : nbreSourisParZone) {
+			total = total + nbre;
+		}
+		return total;
+	}
+	
 	public void setNbreSouris(int nbreSouris) {
 		this.nbreSouris = nbreSouris;
 	}
@@ -89,10 +108,10 @@ public class Ferme {
 	}
 
 	public void setNbreChatsDuJeu (int nbreChatsDuJeu) {
-		this.nbreChatsDuJeu= nbreChatsDuJeu;
+		this.nbreChatsDeFerme = nbreChatsDuJeu;
 	}
 	public int getNbreChatsDuJeu () {
-		return this.nbreChatsDuJeu;
+		return this.nbreChatsDeFerme;
 	}
 	
 	public void setNbreZones(int nbreZones) {
