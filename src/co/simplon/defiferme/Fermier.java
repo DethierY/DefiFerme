@@ -1,6 +1,8 @@
 package co.simplon.defiferme;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Fermier {
 	
@@ -85,8 +87,30 @@ public class Fermier {
 	}
 	
 	protected void afficherPalmares () {
-		for (Chat chat : listeChats) {
-			System.out.println(chat.getNomChat () + "a tué " + chat.getScoreTotal() + " souris.");
+		Chat [] intermediaire = new Chat [this.listeChats.size()];
+		for (int i = 0 ; i < this.listeChats.size() ; i++) {
+			intermediaire [i] = this.listeChats.get(i); 
+		}
+		ArrayList<Chat> permutation = new ArrayList<Chat> ();
+		
+		List<Chat> ordrePalmares = new ArrayList<Chat>();
+		for (int i = 0; i < intermediaire.length - 1; i++) {
+			for (int j = i + 1; j < intermediaire.length; j++) {
+				permutation.add(intermediaire[i]);
+				permutation.add(intermediaire[j]);
+				if (intermediaire [i].getScoreTotal () < intermediaire [j].getScoreTotal () ) {
+					intermediaire [i] = permutation.get(1);
+					intermediaire [j] = permutation.get(0);
+				}
+				permutation.remove(0);
+				permutation.remove(0);
+				
+			}
+			ordrePalmares.add(intermediaire[i]);
+		}
+		ordrePalmares.add(intermediaire[intermediaire.length - 1]);
+		for (Chat chat : ordrePalmares) {
+			System.out.println(chat.getNomChat () + " a tué " + chat.getScoreTotal() + " souris.");
 		}
 	}
 	

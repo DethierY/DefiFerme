@@ -29,7 +29,7 @@ public class Ferme {
 			this.faireUnTourDeJeu(fermier);
 			nbreTours ++;
 		}
-		System.out.println("La chasse a duré " + nbreTours + "jours.");
+		System.out.println("La chasse a duré " + nbreTours + " jours.");
 		fermier.afficherPalmares ();
 	}
 	
